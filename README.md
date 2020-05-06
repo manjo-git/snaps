@@ -1,2 +1,2 @@
-# snaps-
+# snaps
 Ubuntu Snap Packages
