@@ -1,0 +1,206 @@
+name: spdk
+base: core18
+version: '20.04+git'
+summary: The Storage Performance Development Kit (SPDK)
+description: |
+  The Storage Performance Development Kit (SPDK) provides a set of tools 
+  and libraries for writing high performance, scalable, user-mode storage 
+  applications. It achieves high performance by moving all of the necessary 
+  drivers into userspace and operating in a polled mode instead of relying 
+  on interrupts, which avoids kernel context switches and eliminates interrupt 
+  handling overhead.
+grade: stable
+confinement: strict
+
+parts:
+  nasm:
+    source: https://repo.or.cz/nasm.git
+    source-depth: 1
+    plugin: nil
+    override-build: |
+      ./autogen.sh
+      ./configure
+      make 
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/bin
+      cp -a nasm $SNAPCRAFT_PART_INSTALL/usr/bin
+    build-packages:
+        - make
+        - gcc
+  spdk2004:
+    source: https://github.com/spdk/spdk.git
+    source-type: git
+    plugin: make
+    after: [nasm]
+    build-packages:
+      - autotools-dev
+      - build-essential
+      - libcunit1-dev
+      - libaio-dev
+      - libssl-dev
+      - git
+      - astyle
+      - pep8
+      - lcov
+      - clang
+      - uuid-dev
+      - libiscsi-dev
+      - sg3-utils
+      - pciutils
+      - shellcheck
+      - pycodestyle
+      - libunwind-dev
+      - libibverbs-dev
+      - librdmacm-dev
+      - libnuma-dev
+      - nasm
+      - doxygen
+      - mscgen
+      - graphviz
+      - python3-configshell-fb
+      - python3-pexpect
+      - autoconf
+      - automake
+      - libtool
+      - help2man
+      - libfuse-dev
+      - python3-paramiko
+      - libncurses-dev
+    stage-packages:
+      - libibverbs1
+      - librdmacm1
+      - libnuma1
+      - libaio1
+      - sg3-utils
+      - pciutils
+      - nvme-cli
+    override-build: |
+      ./configure --prefix="/opt/spdk" --disable-tests \
+                  --disable-coverage --disable-unit-tests \
+                  --disable-examples
+      make
+      mkdir -p $SNAPCRAFT_PART_INSTALL/opt/spdk/bin
+      mkdir -p $SNAPCRAFT_PART_INSTALL/opt/spdk/scripts
+      mkdir -p $SNAPCRAFT_PART_INSTALL/opt/spdk/include
+      find app/ -executable -type f -exec cp -a {} \
+           $SNAPCRAFT_PART_INSTALL/opt/spdk/bin/ \;
+      cp -a scripts/* $SNAPCRAFT_PART_INSTALL/opt/spdk/scripts/
+      cp -a include/* $SNAPCRAFT_PART_INSTALL/opt/spdk/include/
+
+apps:
+  iscsi-tgt:
+    command: opt/spdk/bin/iscsi_tgt
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  nvmf-tgt:
+    command: opt/spdk/bin/nvmf_tgt
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  spdk-tgt:
+    command: opt/spdk/bin/spdk_tgt
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  spdk-trace:
+    command: opt/spdk/bin/spdk_trace
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  vhost:
+    command: opt/spdk/bin/vhost
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  iscsi-top:
+    command: opt/spdk/bin/iscsi_top
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  spdk-lspci:
+    command: opt/spdk/bin/spdk_lspci
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  spdk-top:
+    command: opt/spdk/bin/spdk_top
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  spdk-trace-record:
+    command: opt/spdk/bin/spdk_trace_record
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  spdkcli:
+    command: $SNAP/opt/spdk/scripts/spdkcli.py
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  rpc:
+    command: $SNAP/opt/spdk/scripts/rpc.py
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  setup:
+    command: $SNAP/opt/spdk/scripts/setup.sh
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  gen-nvme:
+    command: $SNAP/opt/spdk/scripts/gen_nvme.sh
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
