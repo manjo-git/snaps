@@ -75,8 +75,7 @@ parts:
       - nvme-cli
     override-build: |
       ./configure --prefix="/opt/spdk" --disable-tests \
-                  --disable-coverage --disable-unit-tests \
-                  --disable-examples
+                  --disable-coverage --disable-unit-tests
       make
       mkdir -p $SNAPCRAFT_PART_INSTALL/opt/spdk/bin
       mkdir -p $SNAPCRAFT_PART_INSTALL/opt/spdk/scripts
@@ -85,6 +84,9 @@ parts:
            $SNAPCRAFT_PART_INSTALL/opt/spdk/bin/ \;
       cp -a scripts/* $SNAPCRAFT_PART_INSTALL/opt/spdk/scripts/
       cp -a include/* $SNAPCRAFT_PART_INSTALL/opt/spdk/include/
+      cp -a examples/nvme/perf/perf $SNAPCRAFT_PART_INSTALL/opt/spdk/bin/
+      cp -a examples/accel/perf/accel_perf $SNAPCRAFT_PART_INSTALL/opt/spdk/bin/
+      cp -a examples/ioat/perf/ioat_perf $SNAPCRAFT_PART_INSTALL/opt/spdk/bin/
 
 apps:
   iscsi-tgt:
@@ -161,6 +163,33 @@ apps:
       - log-observe
   spdk-trace-record:
     command: opt/spdk/bin/spdk_trace_record
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  nvme-perf:
+    command: opt/spdk/bin/perf
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  accel-perf:
+    command: opt/spdk/bin/accel_perf
+    plugs:
+      - home
+      - network
+      - network-bind
+      - system-observe
+      - system-trace
+      - log-observe
+  ioat-perf:
+    command: opt/spdk/bin/ioat_perf
     plugs:
       - home
       - network
