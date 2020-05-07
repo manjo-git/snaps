@@ -105,14 +105,14 @@ Now the NVMe drive is exposed to the target system over TCP.
 ##### Load the nvme-tcp module.
 
 ```
-arm01@amd64:~$ lsmod | grep nvme-tcp
-arm01@arm01:~$ sudo modprobe nvme-tcp
+ubuntu@amd64:~$ lsmod | grep nvme-tcp
+ubuntu@amd64:~$ sudo modprobe nvme-tcp
 ```
 
 ##### Discover the NVMe drive.
 
 ```
-arm01@arm01:~$ sudo nvme discover -t tcp -a 192.168.0.96  -s 4420
+ubuntu@amd64:~$ sudo nvme discover -t tcp -a 192.168.0.96  -s 4420
 
 Discovery Log Number of Records 1, Generation counter 3
 =====Discovery Log Entry 0======
@@ -124,32 +124,32 @@ portid:  0
 trsvcid: 4420
 subnqn:  nqn.2020-04.io.spdk:cnode1
 traddr:  192.168.0.96
-arm01@arm01:~$ 
+ubuntu@amd64:~$ 
 ```
 
 ##### Connect to the NVMe drive.
 
 ```
-arm01@arm01:~$ sudo nvme connect -t tcp -n nqn.2020-04.io.spdk:cnode1 -a 192.168.0.96  -s 4420
-arm01@arm01:~$ sudo nvme list-subsys
+ubuntu@amd64:~$ sudo nvme connect -t tcp -n nqn.2020-04.io.spdk:cnode1 -a 192.168.0.96  -s 4420
+ubuntu@amd64:~$ sudo nvme list-subsys
 nvme-subsys0 - NQN=nqn.2014.08.org.nvmexpress:144d144dS41GNX1M590398      SAMSUNG MZVLB256HAHQ-000L7              
 \
  +- nvme0 pcie 0000:01:00.0
 nvme-subsys1 - NQN=nqn.2020-04.io.spdk:cnode1
 \
  +- nvme1 tcp traddr=192.168.0.96 trsvcid=4420
-arm01@arm01:~$ sudo nvme list
+ubuntu@amd64:~$ sudo nvme list
 Node             SN                   Model                                    Namespace Usage                      Format           FW Rev  
 ---------------- -------------------- ---------------------------------------- --------- -------------------------- ---------------- --------
 /dev/nvme0n1     S41GNX1M590398       SAMSUNG MZVLB256HAHQ-000L7               1          67.40  GB / 256.06  GB    512   B +  0 B   1L2QEXD7
 /dev/nvme1n1     SPDK00000000000001   SPDK_Controller1                         1         500.11  GB / 500.11  GB    512   B +  0 B   20.07   
-arm01@arm01:~$
+ubuntu@amd64:~$
 ```
 
 ##### To disconnect
 
 ```
-arm01@arm01:~$ nvme disconnect -n "nqn.2020-04.io.spdk:cnode1"
+ubuntu@amd64:~$ nvme disconnect -n "nqn.2020-04.io.spdk:cnode1"
 NQN:nqn.2020-04.io.spdk:cnode1 disconnected 0 controller(s)
-arm01@arm01:~$
+ubuntu@amd64:~$
 ```
