@@ -10,7 +10,7 @@ description: |
   on interrupts, which avoids kernel context switches and eliminates interrupt 
   handling overhead.
 grade: stable
-confinement: strict
+confinement: classic
 
 parts:
   nasm:
