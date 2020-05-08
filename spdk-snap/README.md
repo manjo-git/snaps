@@ -6,10 +6,12 @@ successfully installed you should see the following:
 
 ```
 /snap/bin$ ls
-spdk.gen-nvme   spdk.rpc         spdk.spdk-tgt           spdk.vhost
-spdk.iscsi-tgt  spdk.setup       spdk.spdk-top
-spdk.iscsi-top  spdk.spdkcli     spdk.spdk-trace
-spdk.nvmf-tgt   spdk.spdk-lspci  spdk.spdk-trace-record
+spdk.accel-perf         spdk.nvmf-tgt           spdk.spdk-trace
+spdk.gen-nvme           spdk.rpc                spdk.spdk-trace-record
+spdk.ioat-perf          spdk.setup              spdk.spdkcli
+spdk.iscsi-tgt          spdk.spdk-lspci         spdk.vhost
+spdk.iscsi-top          spdk.spdk-tgt           
+spdk.nvme-perf          spdk.spdk-top           
 /snap/bin$
 ```
 
