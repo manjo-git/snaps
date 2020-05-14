@@ -1,6 +1,6 @@
 name: spdk
 base: core18
-version: '20.04+git'
+version: '20.04'
 summary: The Storage Performance Development Kit (SPDK)
 description: |
   The Storage Performance Development Kit (SPDK) provides a set of tools 
@@ -26,7 +26,7 @@ parts:
     build-packages:
         - make
         - gcc
-  spdk2004:
+  spdk:
     source: https://github.com/spdk/spdk.git
     source-type: git
     plugin: make
@@ -73,9 +73,16 @@ parts:
       - sg3-utils
       - pciutils
       - nvme-cli
+    override-pull: |
+      snapcraftctl pull
+      latest_release="$(git describe --tags `git rev-list --tags --max-count=1`)"
+      git fetch
+      git checkout tags/"${latest_release}"
     override-build: |
       ./configure --prefix="/opt/spdk" --disable-tests \
-                  --disable-coverage --disable-unit-tests
+                  --disable-coverage --disable-unit-tests \
+                  --with-rdma --with-isal
+                  
       make
       mkdir -p $SNAPCRAFT_PART_INSTALL/opt/spdk/bin
       mkdir -p $SNAPCRAFT_PART_INSTALL/opt/spdk/scripts
